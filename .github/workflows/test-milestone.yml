@@ -1,0 +1,52 @@
+name: Test Milestone VMS
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *' # Every hour
+jobs:
+  Test-Milestone:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Milestone Pester tests
+        env:
+          VMSSERVERADDRESS: ${{ secrets.VmsServerAddress }}
+          VMSUSERNAME: ${{ secrets.VmsUserName }}
+          VMSPASSWORD: ${{ secrets.VmsPassword }}
+          VMSBASICUSER: ${{ secrets.VmsBasicUser }}
+        run: |
+          Import-Module Pester -MinimumVersion 5.3
+          $requiredVars = @(
+              'VmsServerAddress'
+              'VmsUsername'
+              'VmsPassword'
+          )
+          $testParams = @{}
+          foreach ($var in $requiredVars) {
+              $testParams[($var.TrimStart('Vms'))] = Get-Item env:$var | Select-Object -ExpandProperty Value -ErrorAction Stop
+          }
+          $testParams.Credential = [pscredential]::new($testParams.Username, ($testParams.Password | ConvertTo-SecureString -AsPlainText -Force))
+          if ($env:VmsBasicUser) {
+              $testParams.BasicUser = [bool]::Parse($env:VmsBasicUser)
+          }
+          if ($env:VmsIncludeChildSites) {
+              $testParams.IncludeChildSites = [bool]::Parse($env:VmsIncludeChildSites)
+          }
+          $container = New-PesterContainer -Path .\Tests\Milestone.Tests.ps1 -Data $testParams
+          $cfg = [PesterConfiguration]@{
+              Run        = @{
+                  Container              = $container
+                  SkipRemainingOnFailure = $true
+                  Exit                   = $true
+              }
+              TestResult = @{
+                  Enabled      = $true
+                  OutputFormat = 'JUnitXml'
+              }
+              Output     = @{
+                  Verbosity = 'Detailed'
+              }
+          }
+          Remove-Item testResults.xml -ErrorAction Ignore
+          Invoke-Pester -Configuration $cfg
+        shell: powershell
