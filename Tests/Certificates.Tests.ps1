@@ -27,11 +27,13 @@ Describe -Name "<uri> - <comment>" -ForEach $testUris {
     }
 
     It 'is up' {
-        $certInfo | Should -Not -BeNullOrEmpty
+        $shouldNotBeDown = $ExpectDown -ne 'True'
+        $certInfo | Should -Not:$shouldNotBeDown -BeNullOrEmpty
     }
 
     It 'is not expired' {
-        $certInfo.NotAfter | Should -BeGreaterThan (Get-Date)
+        $shouldNotBeExpired = $ExpectExpired -ne 'True'
+        $certInfo.NotAfter | Should -Not:$shouldNotBeExpired -BeGreaterThan (Get-Date)
     }
 
     It 'is valid for at least 29 days' {
