@@ -1,0 +1,36 @@
+name: Test Certificates
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */2 * * *' # Every other hour
+jobs:
+  Test-Certificates:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Pester tests
+        run: |
+          Import-Module Pester -MinimumVersion 5.3
+          $container = New-PesterContainer -Path .\Tests\Certificate.tests.ps1 -Data @{ Urls = Import-Csv .\urls.csv }
+          $cfg = [PesterConfiguration]@{
+            Run=@{
+              Container = $container
+              SkipRemainingOnFailure = $true
+              Exit=$true
+            }
+            TestResult = @{
+              Enabled = $true
+              OutputFormat = 'JUnitXml'
+            }
+            Output = @{
+              Verbosity = 'Detailed'
+            }
+          }
+          Remove-Item testResults.xml -ErrorAction Ignore
+          Invoke-Pester -Configuration $cfg
+        shell: pwsh
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: "testResults.xml"

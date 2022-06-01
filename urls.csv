@@ -1,0 +1,6 @@
+"Url","Comment"
+"https://www.milestonesys.com/",""
+"https://www.milestonepstools.com/",""
+"https://expired.badssl.com/","Example of an expired certificate"
+"https://self-signed.badssl.com/","Example of a self-signed certificate"
+"https://revoked.badssl.com/","Example of a revoked certificate"

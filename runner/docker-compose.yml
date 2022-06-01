@@ -1,0 +1,7 @@
+services:
+  runner:
+    image: joshooaj/gha-runner:windows20H2
+    build: .
+    env_file:
+      - .env
+    mem_limit: 4G
