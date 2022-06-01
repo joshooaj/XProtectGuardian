@@ -3,6 +3,8 @@ services:
     image: joshooaj/gha-runner:windows20H2
     restart: unless-stopped
     build: .
+    environment:
+      - GHEPHEMERAL=False
     env_file:
       - .env
     mem_limit: 4G
