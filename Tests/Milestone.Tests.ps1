@@ -41,7 +41,14 @@ BeforeDiscovery {
             State = $_.State
         }
     }
-    
+    $script:registeredServices = Get-RegisteredService | ForEach-Object {
+        @{
+            DisplayName = if ([string]::IsNullOrWhiteSpace($_.Description)) { $_.Name } else { $_.Description }
+            Name        = $_.Name
+            Description = $_.Description
+            Uris        = [uri[]]$_.UriArray
+        }
+    }
 }
 
 Describe -Name "Milestone VMS tests for $ServerAddress" {
@@ -49,7 +56,7 @@ Describe -Name "Milestone VMS tests for $ServerAddress" {
         (Get-VmsCamera).Count | Should -BeGreaterThan 0
     }
 
-    It "Camera '<name>' is responding" -TestCases ($script:itemStates | Where-Object {$_.Kind -eq [VideoOS.Platform.Kind]::Camera}) {
+    It "Camera '<name>' is responding" -TestCases ($script:itemStates | Where-Object { $_.Kind -eq [VideoOS.Platform.Kind]::Camera }) {
         $state | Should -BeIn 'Responding', 'Communication Stopped'
     }
 
@@ -57,24 +64,20 @@ Describe -Name "Milestone VMS tests for $ServerAddress" {
         $state | Should -Be 'Server Responding'
     }
 
-    It "has responsive registered services" {
-        foreach ($svc in Get-RegisteredService) {
-            $hasOneRespondingUri = $false
-            foreach ($uri in [uri[]]$svc.UriArray) {
-                $tncParams = @{
-                    ComputerName     = $uri.Host
-                    Port             = $uri.Port
-                    InformationLevel = 'Quiet'
-                }
-                if (Test-NetConnection @tncParams) {
-                    $hasOneRespondingUri = $true
-                    break
-                }
-                $svcName = if ([string]::IsNullOrWhiteSpace($svc.Description)) { $svc.Name } else { $svc.Description }
-                $hasOneRespondingUri | Should -BeTrue -Because "The '$svcName' service should be responding"
+    It "<displayname> is responding" -TestCases $script:registeredServices {
+        $hasOneRespondingUri = $false
+        foreach ($uri in $uris) {
+            $tncParams = @{
+                ComputerName     = $uri.Host
+                Port             = $uri.Port
+                InformationLevel = 'Quiet'
             }
-            
+            if (Test-NetConnection @tncParams) {
+                $hasOneRespondingUri = $true
+                break
+            }
         }
+        $hasOneRespondingUri | Should -BeTrue
     }
 
     AfterAll {
