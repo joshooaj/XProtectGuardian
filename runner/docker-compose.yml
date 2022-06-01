@@ -1,6 +1,7 @@
 services:
   runner:
     image: joshooaj/gha-runner:windows20H2
+    restart: unless-stopped
     build: .
     env_file:
       - .env
