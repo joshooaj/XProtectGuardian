@@ -4,12 +4,23 @@ param(
     $Urls
 )
 
-$testUris = @()
+$testCases = [system.collections.generic.list[hashtable]]::new()
+[bool]$boolValue
 foreach ($url in $Urls) {
-    $testUris += @{ Uri = [uri]$url.Url; Comment = $url.Comment }
+    $testCase = @{ Uri = [uri]$url.Url }
+    foreach ($key in $url | Get-Member -MemberType NoteProperty | Select-Object -Expand Name) {
+        if (!$testCase.ContainsKey($key)) {
+            if ($key.StartsWith('Expect')) {
+                $testCase.$key = [bool]::Parse($url.$key)
+            } else {
+                $testCase.$key = $url.$key
+            }
+        }
+    }
+    $testCases.Add($testCase)
 }
 
-Describe -Name "<uri> - <comment>" -ForEach $testUris {
+Describe -Name "<uri> - <comment>" -ForEach $testCases {
     BeforeAll {
         if ($null -eq $Uri) {
             throw "Data driven test received no data. The value of `$Uri is `$null"
@@ -26,22 +37,32 @@ Describe -Name "<uri> - <comment>" -ForEach $testUris {
         }
     }
 
-    It 'is up' {
-        $shouldNotBeDown = $ExpectDown -ne 'True'
-        $certInfo | Should -Not:$shouldNotBeDown -BeNullOrEmpty
+    It 'is up' -Skip:$ExpectDown {
+        $certInfo | Should -Not -BeNullOrEmpty
+    }
+    It 'is down' -Skip:(!$ExpectDown) {
+        $certInfo | Should -BeNullOrEmpty
     }
 
-    It 'is not expired' {
-        $shouldNotBeExpired = $ExpectExpired -ne 'True'
-        $certInfo.NotAfter | Should -Not:$shouldNotBeExpired -BeGreaterThan (Get-Date)
+    It 'is not expired' -Skip:($ExpectDown -or $ExpectExpired) {
+        $certInfo.NotAfter | Should -BeGreaterThan (Get-Date)
+    }
+    It 'is expired' -Skip:($ExpectDown -or !$ExpectExpired) {
+        $certInfo.NotAfter | Should -Not -BeGreaterThan (Get-Date)
     }
 
-    It 'is valid for at least 29 days' {
+    It 'is valid for at least 29 days' -Skip:($ExpectDown -or $ExpectExpiring) {
         $certInfo.NotAfter | Should -BeGreaterThan (Get-Date).AddDays(29)
     }
+    It 'is not valid for at least 29 days' -Skip:($ExpectDown -or !$ExpectExpiring) {
+        $certInfo.NotAfter | Should -Not -BeGreaterThan (Get-Date).AddDays(29)
+    }
 
-    It 'is trusted certificate' {
+    It 'is trusted certificate' -Skip:($ExpectDown -or $ExpectUntrusted) {
         $certInfo.Verify() | Should -BeTrue
+    }
+    It 'is not trusted certificate' -Skip:($ExpectDown -or !$ExpectUntrusted) {
+        $certInfo.Verify() | Should -BeFalse
     }
 
     AfterAll {

@@ -4,3 +4,4 @@
 "https://expired.badssl.com/","Example of an expired certificate","False","True","True","True"
 "https://self-signed.badssl.com/","Example of a self-signed certificate","False","False","False","True"
 "https://revoked.badssl.com/","Example of a revoked certificate","False","False","False","True"
+"https://foo.bar.baz","Example of an unreachable URL","True","False","False","False"
