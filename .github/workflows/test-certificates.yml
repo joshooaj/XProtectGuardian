@@ -2,7 +2,7 @@ name: Test Certificates
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */2 * * *' # Every other hour
+    - cron: '*/10 * * * *' # Every ten minutes
 jobs:
   Test-Certificates:
     runs-on: self-hosted
