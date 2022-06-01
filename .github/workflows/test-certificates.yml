@@ -11,7 +11,7 @@ jobs:
       - name: Run Certificate Pester tests
         run: |
           Import-Module Pester -MinimumVersion 5.3
-          $container = New-PesterContainer -Path .\Tests\Certificate.tests.ps1 -Data @{ Urls = Import-Csv .\urls.csv }
+          $container = New-PesterContainer -Path .\Tests\Certificates.Tests.ps1 -Data @{ Urls = Import-Csv .\urls.csv }
           $cfg = [PesterConfiguration]@{
             Run=@{
               Container = $container
