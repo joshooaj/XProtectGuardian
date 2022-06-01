@@ -8,7 +8,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
-      - name: Run Pester tests
+      - name: Run Certificate Pester tests
         run: |
           Import-Module Pester -MinimumVersion 5.3
           $container = New-PesterContainer -Path .\Tests\Certificate.tests.ps1 -Data @{ Urls = Import-Csv .\urls.csv }
@@ -29,8 +29,3 @@ jobs:
           Remove-Item testResults.xml -ErrorAction Ignore
           Invoke-Pester -Configuration $cfg
         shell: powershell
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
-        with:
-          files: "testResults.xml"
