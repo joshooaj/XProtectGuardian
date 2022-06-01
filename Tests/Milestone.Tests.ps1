@@ -57,6 +57,26 @@ Describe -Name "Milestone VMS tests for $ServerAddress" {
         $state | Should -Be 'Server Responding'
     }
 
+    It "has responsive registered services" {
+        foreach ($svc in Get-RegisteredService) {
+            $hasOneRespondingUri = $false
+            foreach ($uri in [uri[]]$svc.UriArray) {
+                $tncParams = @{
+                    ComputerName     = $uri.Host
+                    Port             = $uri.Port
+                    InformationLevel = 'Quiet'
+                }
+                if (Test-NetConnection @tncParams) {
+                    $hasOneRespondingUri = $true
+                    break
+                }
+                $svcName = if ([string]::IsNullOrWhiteSpace($svc.Description)) { $svc.Name } else { $svc.Description }
+                $hasOneRespondingUri | Should -BeTrue -Because "The '$svcName' service should be responding"
+            }
+            
+        }
+    }
+
     AfterAll {
         if ($null -ne (Get-VmsManagementServer -ErrorAction SilentlyContinue)) {
             Disconnect-ManagementServer
