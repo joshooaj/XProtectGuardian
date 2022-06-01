@@ -77,7 +77,7 @@ Describe -Name "Milestone VMS tests for $ServerAddress" {
                 break
             }
         }
-        $hasOneRespondingUri | Should -BeTrue
+        $hasOneRespondingUri | Should -BeTrue -Because "One of $([string]::Join(', ', $uris)) should respond to Test-NetConnection"
     }
 
     AfterAll {
