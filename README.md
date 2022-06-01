@@ -1,6 +1,8 @@
 # XProtectGuardian
 
-[![Test Certificates](https://github.com/joshooaj/XProtectGuardian/actions/workflows/test-certificates.yml/badge.svg)](https://github.com/joshooaj/XProtectGuardian/actions/workflows/test-certificates.yml)
+[![Certificate Tests](https://github.com/joshooaj/XProtectGuardian/actions/workflows/test-certificates.yml/badge.svg)](https://github.com/joshooaj/XProtectGuardian/actions/workflows/test-certificates.yml)
+[![Milestone VMS Tests](https://github.com/joshooaj/XProtectGuardian/actions/workflows/test-milestone.yml/badge.svg)](https://github.com/joshooaj/XProtectGuardian/actions/workflows/test-milestone.yml)
+
 ## Introduction
 
 This repo is intended to demonstrate a create way to automate your infrastructure
