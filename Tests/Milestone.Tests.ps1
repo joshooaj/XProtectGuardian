@@ -60,6 +60,15 @@ Describe -Name "Milestone VMS tests for $ServerAddress" {
         $state | Should -BeIn 'Responding', 'Communication Stopped'
     }
 
+    It "has responsible motion detection settings" {
+        foreach ($cam in Get-VmsCamera) {
+            $name = '{0} ({1})' -f $cam.Name, $cam.Id
+            $motion = $cam.MotionDetectionFolder.MotionDetections[0]
+            $motion.KeyframesOnly | Should -BeTrue -because "$name should not be performing motion detection on all frames."
+            $motion.DetectionMethod | Should -Not -Be 'Normal' -because "$name should not perform motion detection on 100% of the pixels."
+        }
+    }
+
     It "Recorder '<name>' is responding" -TestCases (Get-RecordingServer | Foreach-Object { $id = [guid]$_.Id; @{Name = $_.Name; State = ($script:itemStates | Where-Object Id -eq $id).State } }) {
         $state | Should -Be 'Server Responding'
     }
@@ -77,7 +86,7 @@ Describe -Name "Milestone VMS tests for $ServerAddress" {
                 break
             }
         }
-        $hasOneRespondingUri | Should -BeTrue -Because "One of $([string]::Join(', ', $uris)) should respond to Test-NetConnection"
+        $hasOneRespondingUri | Should -BeTrue -Because "$(if ($uris.Count -gt 1) {'either '})$([string]::Join(' or ', $uris)) should respond to Test-NetConnection"
     }
 
     AfterAll {
