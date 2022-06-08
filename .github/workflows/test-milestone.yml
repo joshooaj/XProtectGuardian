@@ -1,8 +1,8 @@
 name: Test Milestone VMS
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 * * * *' # Every hour
+  # schedule:
+  #   - cron: '0 * * * *' # Every hour
 jobs:
   Test-Milestone:
     runs-on: self-hosted
@@ -36,7 +36,7 @@ jobs:
           $cfg = [PesterConfiguration]@{
               Run        = @{
                   Container              = $container
-                  SkipRemainingOnFailure = $true
+                  SkipRemainingOnFailure = $false
                   Exit                   = $true
               }
               TestResult = @{
