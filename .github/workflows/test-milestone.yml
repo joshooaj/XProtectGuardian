@@ -55,7 +55,7 @@ jobs:
           #Remove-Item testResults.xml -ErrorAction Ignore
           $pester = Invoke-Pester -Configuration $cfg
           #& .\bin\extent.exe -d .\Tests\results\ -o .\docs --merge
-          & reportunit.exe "$PWD\Tests\results" "$PWD\docs"
+          & .\bin\reportunit.exe "$PWD\Tests\results" "$PWD\docs"
           mkdocs gh-deploy --force
           if ($pester.Result -eq 'Failed') {
             exit 1
