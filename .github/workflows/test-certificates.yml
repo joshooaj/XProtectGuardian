@@ -20,7 +20,8 @@ jobs:
             }
             TestResult = @{
               Enabled = $true
-              OutputFormat = 'JUnitXml'
+              OutputPath = '.\Tests\results\certificates.xml'
+              OutputFormat = 'NUnitXml'
             }
             Output = @{
               Verbosity = 'Detailed'

@@ -5,7 +5,7 @@
 
 ## Introduction
 
-This repo is intended to demonstrate a create way to automate your infrastructure
+This repo is intended to demonstrate a creative way to automate your infrastructure
 monitoring using GitHub with a self-hosted GitHub Actions runner to execute a
 collection of Pester tests written in PowerShell.
 
@@ -17,3 +17,5 @@ Here's a list of the different technologies used in this demonstration...
 4. PowerShell as our shell of choice.
 5. Pester as our test framework.
 6. MilestonePSTools as a means of communicating with a Milestone VMS.
+7. ReportUnit or ExtentReports to generate a static website from our test results.
+8. MkDocs as a tool to deploy our static site to GitHub Pages.

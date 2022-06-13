@@ -1,2 +1,4 @@
 .env
 setenv.ps1
+results/
+docs/

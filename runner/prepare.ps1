@@ -44,3 +44,11 @@ if($hash -ne '2a504f852b0ab0362d08a36a84984753c2ac159ef17e5d1cd93f661ecd367cbd')
 # Extract the installer
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 [System.IO.Compression.ZipFile]::ExtractToDirectory("$PWD/actions-runner-win-x64-2.291.1.zip", $PWD)
+
+# Install Python + mkdocs
+Invoke-WebRequest 'https://www.python.org/ftp/python/3.10.5/python-3.10.5-amd64.exe' -OutFile .\python3.10.5.exe
+Start-Process .\python3.10.5.exe -ArgumentList '/quiet', 'InstallAllUsers=1', 'PrependPath=1' -Wait
+Remove-Item .\python3.10.5.exe
+$env:Path += ';C:\Program Files\Python310'
+$env:Path += ';C:\Program Files\Python310\scripts'
+& pip install mkdocs

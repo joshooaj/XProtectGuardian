@@ -41,12 +41,15 @@ jobs:
               }
               TestResult = @{
                   Enabled      = $true
-                  OutputFormat = 'JUnitXml'
+                  OutputPath = '.\Tests\results\milestone.xml'
+                  OutputFormat = 'NUnitXml'
               }
               Output     = @{
                   Verbosity = 'Detailed'
               }
           }
-          Remove-Item testResults.xml -ErrorAction Ignore
+          #Remove-Item testResults.xml -ErrorAction Ignore
           Invoke-Pester -Configuration $cfg
+          & .\bin\extent.exe -d .\Tests\results\ -o .\docs
+          mkdocs gh-deploy
         shell: powershell
