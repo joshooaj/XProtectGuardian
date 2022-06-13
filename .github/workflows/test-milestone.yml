@@ -1,10 +1,12 @@
 name: Test Milestone VMS
 on:
   workflow_dispatch:
+  # Uncomment the schedule node to use cron notation to schedule the worlflow.
   # schedule:
   #   - cron: '0 * * * *' # Every hour
 jobs:
   Test-Milestone:
+    # Replace self-hosted with "windows-latest" to use a GitHub-hosted runner.
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2

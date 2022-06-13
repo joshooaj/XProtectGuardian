@@ -6,10 +6,10 @@
 ## Introduction
 
 This repo is intended to demonstrate a creative way to automate your infrastructure
-monitoring using GitHub with a self-hosted GitHub Actions runner to execute a
+monitoring using GitHub. It uses a self-hosted GitHub Actions runner to execute a
 collection of Pester tests written in PowerShell.
 
-Here's a list of the different technologies used in this demonstration...
+Here's a list of the different tools used in this demonstration...
 
 1. GitHub for source control.
 2. Automated script execution using GitHub Actions with a self-hosted runner.
@@ -19,3 +19,4 @@ Here's a list of the different technologies used in this demonstration...
 6. MilestonePSTools as a means of communicating with a Milestone VMS.
 7. ReportUnit or ExtentReports to generate a static website from our test results.
 8. MkDocs as a tool to deploy our static site to GitHub Pages.
+
