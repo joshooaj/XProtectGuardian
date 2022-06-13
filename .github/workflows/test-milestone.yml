@@ -37,7 +37,8 @@ jobs:
               Run        = @{
                   Container              = $container
                   SkipRemainingOnFailure = $false
-                  Exit                   = $true
+                  Exit                   = $false
+                  PassThru               = $true
               }
               TestResult = @{
                   Enabled      = $true
@@ -49,7 +50,10 @@ jobs:
               }
           }
           #Remove-Item testResults.xml -ErrorAction Ignore
-          Invoke-Pester -Configuration $cfg
+          $pester = Invoke-Pester -Configuration $cfg
           & .\bin\extent.exe -d .\Tests\results\ -o .\docs
           mkdocs gh-deploy
+          if ($pester.Result -eq 'Failed') {
+            exit 1
+          }
         shell: powershell
