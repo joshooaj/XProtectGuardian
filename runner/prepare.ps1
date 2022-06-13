@@ -60,5 +60,5 @@ Invoke-WebRequest 'https://github.com/git-for-windows/git/releases/download/v2.3
 Start-Process .\portablegit.exe -ArgumentList '-o"C:\git\"', '-y' -Wait
 Remove-Item .\portablegit.exe
 $path = (Get-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path
-$path = "$path;C:\git"
+$path = "$path;C:\git\bin"
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value $path
