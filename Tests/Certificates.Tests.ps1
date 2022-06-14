@@ -1,7 +1,11 @@
 param(
     [Parameter(Mandatory)]
     [pscustomobject[]]
-    $Urls
+    $Urls,
+
+    [Parameter(ValueFromRemainingArguments)]
+    [object[]]
+    $ExtraParams
 )
 
 $testCases = [system.collections.generic.list[hashtable]]::new()

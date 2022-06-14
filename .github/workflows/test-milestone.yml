@@ -23,7 +23,9 @@ jobs:
               'VmsUsername'
               'VmsPassword'
           )
-          $testParams = @{}
+          $testParams = @{
+            Urls = Import-Csv .\urls.csv
+          }
           foreach ($var in $requiredVars) {
               $testParams[($var.TrimStart('Vms'))] = Get-Item env:$var | Select-Object -ExpandProperty Value -ErrorAction Stop
           }
@@ -34,7 +36,7 @@ jobs:
           if ($env:VmsIncludeChildSites) {
               $testParams.IncludeChildSites = [bool]::Parse($env:VmsIncludeChildSites)
           }
-          $container = New-PesterContainer -Path .\Tests\Milestone.Tests.ps1 -Data $testParams
+          $container = New-PesterContainer -Path .\Tests -Data $testParams
           $cfg = [PesterConfiguration]@{
               Run        = @{
                   Container              = $container
@@ -45,7 +47,7 @@ jobs:
               TestResult = @{
                   Enabled       = $true
                   TestSuiteName = 'XProtectGuardian'
-                  OutputPath    = '.\Tests\results\milestone.xml'
+                  OutputPath    = '.\Tests\results\testResults.xml'
                   OutputFormat  = 'NUnitXml'
               }
               Output     = @{
