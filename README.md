@@ -2,6 +2,12 @@
 
 [![Milestone VMS Tests](https://github.com/joshooaj/XProtectGuardian/actions/workflows/test-milestone.yml/badge.svg)](https://www.joshooaj.com/XProtectGuardian/)
 
+**Important**: This repository is provided as-is, as a dev connect sample. It
+does not represent production-ready code and should be used for inspiration only.
+I will not be accepting pull requests or issues, but you are welcome to contact
+me for more detail if you'd like to learn more about some aspect of the project
+or presentation.
+
 ## Introduction
 
 Hi! More and more often I find myself communicating with customers who have an
