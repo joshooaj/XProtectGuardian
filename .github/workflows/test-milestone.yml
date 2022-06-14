@@ -44,18 +44,17 @@ jobs:
                   PassThru               = $true
               }
               TestResult = @{
-                  Enabled      = $true
-                  OutputPath = '.\Tests\results\milestone.xml'
-                  OutputFormat = 'NUnitXml'
+                  Enabled       = $true
+                  TestSuiteName = 'XProtectGuardian'
+                  OutputPath    = '.\Tests\results\milestone.xml'
+                  OutputFormat  = 'NUnitXml'
               }
               Output     = @{
                   Verbosity = 'Detailed'
               }
           }
-          #Remove-Item testResults.xml -ErrorAction Ignore
           $pester = Invoke-Pester -Configuration $cfg
-          & .\bin\extent.exe -d .\Tests\results\ -o .\docs --merge
-          #& .\bin\reportunit.exe "$PWD\Tests\results" "$PWD\docs"
+          & .\bin\extent.exe -d .\Tests\results\ -o .\docs --merge -r v3html
           mkdocs gh-deploy --force
           if ($pester.Result -eq 'Failed') {
             exit 1
