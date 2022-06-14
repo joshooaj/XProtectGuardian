@@ -1,12 +1,12 @@
-param(
-    [Parameter(Mandatory)]
-    [pscustomobject[]]
-    $Urls,
+# param(
+#     [Parameter()]
+#     [pscustomobject[]]
+#     $Urls,
 
-    [Parameter(ValueFromRemainingArguments)]
-    [object[]]
-    $ExtraParams
-)
+#     [Parameter(ValueFromRemainingArguments)]
+#     [object]
+#     $ExtraParams
+# )
 
 $testCases = [system.collections.generic.list[hashtable]]::new()
 [bool]$boolValue

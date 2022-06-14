@@ -15,9 +15,9 @@ param(
     [switch]
     $IncludeChildSites,
 
-    [Parameter(ValueFromRemainingArguments)]
-    [object[]]
-    $ExtraParams
+    [Parameter()]
+    [pscustomobject[]]
+    $Urls
 )
 
 $script:connectParams = @{

@@ -18,18 +18,11 @@ jobs:
           VMSBASICUSER: ${{ secrets.VmsBasicUser }}
         run: |
           Import-Module Pester -MinimumVersion 5.3
-          $requiredVars = @(
-              'VmsServerAddress'
-              'VmsUsername'
-              'VmsPassword'
-          )
           $testParams = @{
-            Urls = Import-Csv .\urls.csv
+            Urls          = Import-Csv .\urls.csv
+            ServerAddress = $env:VmsServerAddress
+            Credential    = [pscredential]::new($env:VmsUsername, ($env:VmsPassword | ConvertTo-SecureString -AsPlainText -Force))
           }
-          foreach ($var in $requiredVars) {
-              $testParams[($var.TrimStart('Vms'))] = Get-Item env:$var | Select-Object -ExpandProperty Value -ErrorAction Stop
-          }
-          $testParams.Credential = [pscredential]::new($testParams.Username, ($testParams.Password | ConvertTo-SecureString -AsPlainText -Force))
           if ($env:VmsBasicUser) {
               $testParams.BasicUser = [bool]::Parse($env:VmsBasicUser)
           }

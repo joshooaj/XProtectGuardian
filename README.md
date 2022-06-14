@@ -48,7 +48,7 @@ is nothing more than the _idea_ of implementing a form of automation to monitor
 not just the health of a VMS but to also monitor for configuration drift or
 unusual activity.
 
-## Tools and technologies used in this repo...
+## Tools and technologies used in this repo
 
 1. GitHub for source control.
 2. Automated script execution using GitHub Actions with a self-hosted runner.
@@ -59,3 +59,31 @@ unusual activity.
 6. [MilestonePSTools](https://www.milestonepstools.com) as a means of communicating with a Milestone VMS from PowerShell.
 7. Extent-Framework's [ExtentReports .NET CLI](https://github.com/extent-framework/extentreports-dotnet-cli) to generate a static website from the NUnit XML test results produced by Pester.
 8. [MkDocs](https://www.mkdocs.org/) as a tool to deploy our static site to GitHub Pages.
+
+## What I would change, given the time
+
+Something like this should evolve with the environment, and the product over
+time, and in that sense, there's no end to the things I would change over time.
+But there are a couple specific items on my shortlist of things I would change
+right away...
+
+The first thing I would change is to move all PowerShell commands out of the
+GitHub Action workflow YAML file, and use something like the [psake](https://github.com/psake/psake)
+build automation PowerShell module, such that the YAML file merely invokes psake.
+That way the PowerShell code is in a dedicated file which is easier to lint and
+maintain. This is what we do with the MilestonePSTools module and the Azure
+DevOps build pipeline - simply call `build.ps1 -Task Publish` and the Publish
+psake task is executed after all the tasks it depends on automatically.
+
+Second, I would expand on a set of "common sense" tests to validate
+assumptions like "if a camera is in a 30 day storage configuration, it should
+have 30 days of recordings", or "if a camera is recording on motion, it should
+have detected motion in the last 24 hours".
+
+Finally, depending on the environment and if Smart Client is commonly used by
+the system administrators, I might consider generating alarms assigned to the
+Administrator's role when a test fails. That way nobody is relying on seeing
+a GitHub Actions failure email and the errors are displayed prominently in a
+Milestone user interface already used by the team maintaining the installation.
+Those alarms can be relatively easily produced using the `New-Alarm` and
+`Send-Alarm` cmdlets from MilestonePSTools.
