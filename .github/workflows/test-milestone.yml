@@ -17,7 +17,6 @@ jobs:
           VMSPASSWORD: ${{ secrets.VmsPassword }}
           VMSBASICUSER: ${{ secrets.VmsBasicUser }}
         run: |
-          $env:PATH += ';C:\git\bin'
           Import-Module Pester -MinimumVersion 5.3
           $requiredVars = @(
               'VmsServerAddress'
